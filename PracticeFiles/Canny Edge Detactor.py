@@ -34,8 +34,10 @@ ax[0].set_title('noisy image', fontsize=20)
 ax[1].imshow(edges1, cmap='gray')
 ax[1].set_title(r'Canny filter, $\sigma=1$', fontsize=20)
 
-ax[2].plot(509, 413, color='cyan', marker='o', linestyle='None', markersize=3)
-ax[2].plot(415, 510, color='red', marker='o', linestyle='None', markersize=3)
+ax[2].plot(510, 415, color='cyan', marker='o', linestyle='None', markersize=3)
+ax[2].plot(510, 413, color='red', marker='o', linestyle='None', markersize=3)
+
+ax[2].plot(525, 397, color='red', marker='o', linestyle='None', markersize=3)
 ax[2].imshow(edges2, cmap='gray')
 ax[2].set_title(r'Canny filter, $\sigma=3$', fontsize=20)
 

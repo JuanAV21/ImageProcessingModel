@@ -22,7 +22,7 @@ class ProcessFilters:
         self.corners = corner_peaks(corner_harris(target), min_distance=5, threshold_rel=0.02)
 
     def process_edges(self, target):
-        self.edges = feature.canny(target)
+        self.edges = feature.canny(target, sigma=5)
 
     def corners_detected(self):
         return len(self.corners)
