@@ -7,6 +7,7 @@
 
 from Resources.ProcessFilters import ProcessFilters
 from Resources.Images import Images
+import matplotlib.pyplot as plt
 import numpy as np
 import math
 
@@ -27,7 +28,7 @@ def is_there_a_true(edges, searchArea):
     return False
 
 
-def distance(corners, target):
+def get_distance_point(corners, target):
     length = len(corners)
     table = [0] * length
     minValue = 100
@@ -42,7 +43,7 @@ def distance(corners, target):
 
 
 def linear_formula(cornerOne, cornerTwo):
-    print("first point: ", cornerOne, "second point: ", cornerTwo, sep=" : ")
+    #print("first point: ", cornerOne, "second point: ", cornerTwo, sep=" : ")
     m = (cornerTwo[1] - cornerOne[1])/(cornerTwo[0] - cornerOne[0])
     b = -(cornerOne[0] * m) + cornerOne[1]
     return np.array([m, b])
@@ -60,14 +61,36 @@ def y_output(var, pointA, pointB):
         pointA = temp
     for x in range(pointB[0]+1, pointA[0]):
         y = var[0] * x + var[1]
-        linear_coord.append(np.array([x, y]))
+        linear_coord.append(np.array([x, round(y)]))
     return np.array(linear_coord)
+
 
 def is_dots_connected(line, edges):
     for i in range(len(line)):
-        
+        area = search_area(line[i], 3)
+        temp = is_there_a_true(edges, area)
+        if not temp:
+            return False
+    return True
 
-
+def get_corners_connection(corners, edges):
+    length = len(corners)
+    table = [[0 for i in range(length)] for j in range(length)]
+    row = 0
+    for corner in corners:
+        for index in range(length):
+            #print(index, corner, sep="  :  ")
+            #print(corner, corners[index], corner[0] == corners[index][0], corner[1] == corners[index][1], row, sep=" : ")
+            if not (corner[0] == corners[index][0] and corner[1] == corners[index][1]):
+                #print(row, index, sep=" : ")
+                var = linear_formula(corner, corners[index])
+                line = y_output(var, corner, corners[index])
+                table[row][index] = is_dots_connected(line, edges)
+            else:
+                #print(row, index, sep=" : ")
+                table[row][index] = False
+        row += 1
+    return table
 
 
 # _------___------------_------_--____--__-__--__-___-_-_-__--___----______-----_---___________-----------------------------
@@ -77,16 +100,30 @@ taskOne = ProcessFilters(image.getImage())
 area = search_area(taskOne.corners[0], 4)
 edges = taskOne.edges
 
-print("search area: ", area)
-print("Coordinate(corner): ", taskOne.corners[0])
-print("This is where a line was detected: ", is_there_a_true(edges, area))
+#print("search area: ", area)
+#print("Coordinate(corner): ", taskOne.corners[0])
+#print("This is where a line was detected: ", is_there_a_true(edges, area))
 
-print("How many corners got detected: ", len(taskOne.corners))
-nextCoord = distance(taskOne.corners, taskOne.corners[0])
-print("What is the next nearest corner: ", distance(taskOne.corners, taskOne.corners[0]))
+#print("How many corners got detected: ", len(taskOne.corners))
+#nextCoord = get_distance_point(taskOne.corners, taskOne.corners[0])
+#print("What is the next nearest corner: ", get_distance_point(taskOne.corners, taskOne.corners[0]))
 
-print(taskOne.corners[int(nextCoord[1])])
-print(linear_formula(taskOne.corners[int(nextCoord[1])], taskOne.corners[0]))
-print(y_output(linear_formula(taskOne.corners[int(nextCoord[1])], taskOne.corners[0]), taskOne.corners[int(nextCoord[1])], taskOne.corners[0]))
-line = y_output(linear_formula(taskOne.corners[int(nextCoord[1])], taskOne.corners[0]), taskOne.corners[int(nextCoord[1])], taskOne.corners[0])
+#print(taskOne.corners[int(nextCoord[1])])
+#print(linear_formula(taskOne.corners[int(nextCoord[1])], taskOne.corners[0]))
+#print(y_output(linear_formula(taskOne.corners[int(nextCoord[1])], taskOne.corners[0]), taskOne.corners[int(nextCoord[1])], taskOne.corners[0]))
+#line = y_output(linear_formula(taskOne.corners[int(nextCoord[1])], taskOne.corners[0]), taskOne.corners[int(nextCoord[1])], taskOne.corners[0])
+
+#print(is_dots_connected(line, edges))
+
+#print(get_corners_connection(taskOne.corners, taskOne.edges))
+#print(type(image.getImage().shape))
+
+plt.rcParams["figure.figsize"] = [image.getImage().shape]
+plt.rcParams["figure.autolayout"] = True
+plt.plot(taskOne.corners[:, 1], taskOne.corners[:, 0], color='cyan', marker='o', linestyle='None', markersize=6)
+table = get_corners_connection(taskOne.corners, taskOne.edges)
+length = len(taskOne.corners)
+for x in range(length):
+    for y in range(length):
+        if table[x][y]:
 
