@@ -19,7 +19,8 @@ class ProcessFilters:
         self.process_edges(image)
 
     def process_corners(self, target):
-        self.corners = corner_peaks(corner_harris(target), min_distance=5, threshold_rel=0.02)
+        #default values: [min_distance=5, threshold_rel=0.02]
+        self.corners = corner_peaks(corner_harris(target), min_distance=2, threshold_rel=0.009)
 
     def process_edges(self, target):
         self.edges = feature.canny(target, sigma=5)

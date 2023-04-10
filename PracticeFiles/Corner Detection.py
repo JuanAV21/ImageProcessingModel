@@ -8,8 +8,8 @@ import cv2 as cv
 
 
 pic = Images()
-image = pic.getImage()
-
+image = pic.getImage(3)
+print(image.shape)
 coords = corner_peaks(corner_harris(image), min_distance=5, threshold_rel=0.02)
 print(coords)
 coords_subpix = corner_subpix(image, coords, window_size=40)
@@ -21,6 +21,6 @@ ax.plot(coords[:, 1], coords[:, 0], color='cyan', marker='o',
         linestyle='None', markersize=6)
 #ax.plot(coords_subpix[:, 1], coords_subpix[:, 0], '+r', markersize=15)
 #ax.axis((0, 310, 200, 0))
-ax.axis((0, 700, 700, 0))
+ax.axis((0, 5000, 3333, 0))
 plt.show()
 

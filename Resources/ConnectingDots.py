@@ -44,7 +44,10 @@ def get_distance_point(corners, target):
 
 def linear_formula(cornerOne, cornerTwo):
     #print("first point: ", cornerOne, "second point: ", cornerTwo, sep=" : ")
-    m = (cornerTwo[1] - cornerOne[1])/(cornerTwo[0] - cornerOne[0])
+    if cornerTwo[0] - cornerOne[0] > 0:
+        m = (cornerTwo[1] - cornerOne[1]) / (cornerTwo[0] - cornerOne[0])
+    else:
+        m = 0
     b = -(cornerOne[0] * m) + cornerOne[1]
     return np.array([m, b])
 
@@ -52,6 +55,7 @@ def linear_formula(cornerOne, cornerTwo):
 # m = 510 - 525 / 415 - 397
 # m = -15/18
 # b = (397 * -.833) - 525
+
 
 def y_output(var, pointA, pointB):
     linear_coord = []
@@ -67,11 +71,12 @@ def y_output(var, pointA, pointB):
 
 def is_dots_connected(line, edges):
     for i in range(len(line)):
-        area = search_area(line[i], 3)
+        area = search_area(line[i], 5)
         temp = is_there_a_true(edges, area)
         if not temp:
             return False
     return True
+
 
 def get_corners_connection(corners, edges):
     length = len(corners)
@@ -95,7 +100,7 @@ def get_corners_connection(corners, edges):
 
 # _------___------------_------_--____--__-__--__-___-_-_-__--___----______-----_---___________-----------------------------
 image = Images()
-taskOne = ProcessFilters(image.getImage())
+taskOne = ProcessFilters(image.getImage(3))
 
 area = search_area(taskOne.corners[0], 4)
 edges = taskOne.edges
@@ -118,12 +123,40 @@ edges = taskOne.edges
 #print(get_corners_connection(taskOne.corners, taskOne.edges))
 #print(type(image.getImage().shape))
 
-plt.rcParams["figure.figsize"] = [image.getImage().shape]
-plt.rcParams["figure.autolayout"] = True
-plt.plot(taskOne.corners[:, 1], taskOne.corners[:, 0], color='cyan', marker='o', linestyle='None', markersize=6)
+#print(image.getImage(3).shape[0], image.getImage(3).shape[1], sep=" : ")
+
+plt.plot(taskOne.corners[:, 1], -(taskOne.corners[:, 0]), color='cyan', marker='o', linestyle='None', markersize=6)
 table = get_corners_connection(taskOne.corners, taskOne.edges)
 length = len(taskOne.corners)
+corners = []
+print(taskOne.corners)
+notConnectedIndex = []
+for i in range(length):
+    corners.append([taskOne.corners[i][1], -(taskOne.corners[i][0])])
+print(corners)
+
+cnt = 0
 for x in range(length):
     for y in range(length):
         if table[x][y]:
+            xValues = [corners[x][0], corners[y][0]]
+            yValues = [corners[x][1], corners[y][1]]
+            plt.plot(xValues, yValues, 'bo', linestyle="-")
+        else:
+            cnt += 1
+    if cnt == length:
+        notConnectedIndex.append(x)
+    cnt = 0
+
+#print("------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+#print(notConnectedIndex)
+#print("------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+#print(table)
+#print("------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+#print(corners)
+#print("------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+
+for i in notConnectedIndex:
+    print(corners[i])
+plt.show()
 
