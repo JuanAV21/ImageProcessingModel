@@ -1,6 +1,6 @@
 # Image Processing Model
 ### April 11, 2023
-<img src="">
+<img src="https://github.com/JuanAV21/ImageProcessingModel/blob/main/Preview/Sides%26corners.png">
 
 ##Table of contects
 1. [Overview](#Overview)
