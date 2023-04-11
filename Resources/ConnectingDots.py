@@ -100,7 +100,7 @@ def get_corners_connection(corners, edges):
 
 # _------___------------_------_--____--__-__--__-___-_-_-__--___----______-----_---___________-----------------------------
 image = Images()
-taskOne = ProcessFilters(image.getImage(3))
+taskOne = ProcessFilters(image.getImage(1))
 
 area = search_area(taskOne.corners[0], 4)
 edges = taskOne.edges
