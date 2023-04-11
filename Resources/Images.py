@@ -28,8 +28,11 @@ class Images:
     def Load(self):
         pic_List = os.listdir(self.src_path)
         for filename in pic_List:
+            print(filename)
             loadedImage = cv.imread(self.src_path + "/" + filename)
             loadedImage = cv.cvtColor(loadedImage, cv.COLOR_BGR2GRAY)
             loadedImage = np.float32(loadedImage)
             self.images.append(loadedImage)
+
+images = Images()
 
